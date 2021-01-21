@@ -1,0 +1,2 @@
+  React components:
+- Komponentas negali redaguoti savo propsu 
