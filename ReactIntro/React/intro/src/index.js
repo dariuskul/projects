@@ -16,7 +16,7 @@ function NumberList(props) {
 
 const numbers = [1,2,3,4,5];
 ReactDOM.render(
-  <Form/>,
+  <App/>,
   document.getElementById('root')
 );
 

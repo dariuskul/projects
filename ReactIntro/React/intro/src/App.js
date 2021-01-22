@@ -1,11 +1,11 @@
 import Comment from './Comment'
 import Clock from './Clock'
 import Counter from './Counter'
+import RandomNames from './Components/RandomNames';
 function App() {
   return (
     <div>
-      <Clock/>
-      <Counter/>
+      <RandomNames/>
     </div>
   );
 }
