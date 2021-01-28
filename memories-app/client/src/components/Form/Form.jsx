@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import useStyles from './styles';
 import {TextField, Button, Typography, Paper} from '@material-ui/core';
 import FileBase from 'react-file-base64';
 import {useDispatch} from 'react-redux';
-import { createPost } from '../../actions/posts';
+import { createPost, updatePost } from '../../actions/posts';
+import {useSelector} from 'react-redux';
+const Form = ({currentId, setCurrentId}) => {
 
-const Form = () => {
     const classes = useStyles();
     const [postData, setData] = useState({
         creator: '',
@@ -14,22 +15,42 @@ const Form = () => {
         selectedFile: '',
         message: ''
     });
+    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
     const dispatch = useDispatch();
     const handleSubmit =(e) =>{
         e.preventDefault();
-        console.log("THIS WAS SUBMITTED:", postData);
-        dispatch(createPost(postData));
+        if(currentId){
+            dispatch(updatePost(currentId,postData));
+        }
+        else{
+            dispatch(createPost(postData));
+        }
+        
+        clear();
 
     }
 
-    const clear = () =>{
+    useEffect(()=>{
+        if(post){
+            setData(post);
+        }
+    }, [post]) // useEffect will be executed when post changes
 
+    const clear = () =>{
+        setCurrentId(null);
+        setData({
+        creator: '',
+        title: '',
+        tags: '',
+        selectedFile: '',
+        message: ''
+        })
     }
 
     return(
         <Paper className={classes.paper}>
             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
-                <Typography variant="h6">Creating Memory</Typography>
+                <Typography variant="h6">{post ? 'Editing' : 'Creating'} Memory</Typography>
                 <TextField 
                 name="creator" 
                 variant="outlined" 
@@ -70,7 +91,7 @@ const Form = () => {
                     />
                 </div>
                 <Button className={classes.buttonSubmit} color="primary" variant="contained" size="large" type="submit" fullWidth>Submit</Button>
-                <Button className={classes.buttonSubmit} color="secondary" variant="contained" size="small" type="clear" fullWidth>Clear</Button>
+                <Button className={classes.buttonSubmit} color="secondary" variant="contained" size="small" type="clear" fullWidth onClick={clear}>Clear</Button>
             </form>
         </Paper>
     )
