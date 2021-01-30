@@ -5,6 +5,9 @@ import FileBase from 'react-file-base64';
 import {useDispatch} from 'react-redux';
 import { createPost, updatePost } from '../../actions/posts';
 import {useSelector} from 'react-redux';
+import Alert from '@material-ui/lab/Alert';
+import  {useFormik} from 'formik';
+import * as yup from 'yup';
 const Form = ({currentId, setCurrentId}) => {
 
     const classes = useStyles();
@@ -13,85 +16,91 @@ const Form = ({currentId, setCurrentId}) => {
         title: '',
         tags: '',
         selectedFile: '',
-        message: ''
+        message: '',
     });
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
     const dispatch = useDispatch();
-    const handleSubmit =(e) =>{
-        e.preventDefault();
-        if(currentId){
-            dispatch(updatePost(currentId,postData));
-        }
-        else{
-            dispatch(createPost(postData));
-        }
-        
-        clear();
 
-    }
+
 
     useEffect(()=>{
         if(post){
-            setData(post);
+            formik.setValues(post);
         }
-    }, [post]) // useEffect will be executed when post changes
+    },[post])
 
-    const clear = () =>{
-        setCurrentId(null);
-        setData({
-        creator: '',
-        title: '',
-        tags: '',
-        selectedFile: '',
-        message: ''
+    const validationSchema = yup.object({
+        creator: yup.string()
+          .required('Email is required'),
+      });
+
+        const formik = useFormik({
+          initialValues: {
+            creator: postData.creator,
+            title: postData.title,
+            message: postData.message,
+            tags: postData.tags,
+            selectedFile: postData.selectedFile
+          },
+          validationSchema: validationSchema,
+          onSubmit: (values) => {
+            if(currentId)
+                dispatch(updatePost(currentId,values));
+            else{
+                dispatch(createPost(values));
+            }
+          }
         })
-    }
+
 
     return(
         <Paper className={classes.paper}>
-            <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={handleSubmit}>
+            {console.log(..."OPS", postData.creator)}
+            <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={formik.handleSubmit}>
                 <Typography variant="h6">{post ? 'Editing' : 'Creating'} Memory</Typography>
                 <TextField 
                 name="creator" 
                 variant="outlined" 
                 label="Creator" 
                 fullWidth
-                value={postData.creator}
-                onChange={(e) => setData({...postData,creator: e.target.value})}
+                value={formik.values.creator}
+                onChange={formik.handleChange}
+                error={formik.touched.creator && Boolean(formik.errors.creator)}
+                helperText={formik.touched.creator && formik.errors.creator}
                 />
                 <TextField 
                 name="title" 
                 variant="outlined" 
                 label="Title" 
                 fullWidth
-                value={postData.title}
-                onChange={(e) => setData({...postData,title: e.target.value})}
+                value={formik.values.title}
+                onChange={formik.handleChange}
                 />
                 <TextField 
                 name="message" 
                 variant="outlined" 
                 label="Message" 
                 fullWidth
-                value={postData.message}
-                onChange={(e) => setData({...postData,message: e.target.value})}
+                value={formik.values.message}
+                onChange={formik.handleChange}
                 />
                 <TextField 
                 name="tags" 
                 variant="outlined" 
                 label="Tags" 
                 fullWidth
-                value={postData.tags}
-                onChange={(e) => setData({...postData,tags: e.target.value})}
+                value={formik.values.tags}
+                onChange={formik.handleChange}
                 />
                 <div className={classes.fileInput}>
                     <FileBase 
                         type="file"
                         multiple={false}
-                        onDone={({base64})=> setData({...postData, selectedFile: base64})}
+                        onDone={({base64})=> {formik.values.selectedFile= base64}}
                     />
                 </div>
-                <Button className={classes.buttonSubmit} color="primary" variant="contained" size="large" type="submit" fullWidth>Submit</Button>
-                <Button className={classes.buttonSubmit} color="secondary" variant="contained" size="small" type="clear" fullWidth onClick={clear}>Clear</Button>
+                <Button className={classes.buttonSubmit} color="primary" variant="contained" size="large" type="submit" fullWidth>{post? 'Update memory!' : 'Create memory!'}</Button>
+                <Button className={classes.buttonSubmit} color="secondary" variant="contained" size="small" type="clear" fullWidth>Clear</Button>
             </form>
         </Paper>
     )
