@@ -8,6 +8,7 @@ import {useSelector} from 'react-redux';
 import Alert from '@material-ui/lab/Alert';
 import  {useFormik} from 'formik';
 import * as yup from 'yup';
+import noob from '../../images/noob.png';
 const Form = ({currentId, setCurrentId}) => {
 
     const classes = useStyles();
@@ -15,7 +16,7 @@ const Form = ({currentId, setCurrentId}) => {
         creator: '',
         title: '',
         tags: '',
-        selectedFile: '',
+        selectedFile: noob,
         message: '',
     });
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
@@ -27,11 +28,19 @@ const Form = ({currentId, setCurrentId}) => {
         if(post){
             formik.setValues(post);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[post])
+
 
     const validationSchema = yup.object({
         creator: yup.string()
-          .required('Email is required'),
+          .required('Your name is required!'),
+        title: yup.string()
+            .required('Specify title for your memory!'),
+        message: yup.string()
+            .required('Write something about your memory!'),
+        selectedFile: yup.mixed()
+            .required('Your memory photo!')
       });
 
         const formik = useFormik({
@@ -75,6 +84,8 @@ const Form = ({currentId, setCurrentId}) => {
                 fullWidth
                 value={formik.values.title}
                 onChange={formik.handleChange}
+                error={formik.touched.title && Boolean(formik.errors.title)}
+                helperText={formik.touched.title && formik.errors.title}
                 />
                 <TextField 
                 name="message" 
@@ -83,6 +94,8 @@ const Form = ({currentId, setCurrentId}) => {
                 fullWidth
                 value={formik.values.message}
                 onChange={formik.handleChange}
+                error={formik.touched.message && Boolean(formik.errors.message)}
+                helperText={formik.touched.message && formik.errors.message}
                 />
                 <TextField 
                 name="tags" 

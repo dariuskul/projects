@@ -9,6 +9,7 @@ import Posts from './components/Posts/Posts';
 import Form from './components/Form/Form';
 
 import useStyles from './styles';
+import Register from './components/Auth/Register';
 
  const App = () =>{
      const [currentId, setCurrentId] = useState(null);
@@ -35,6 +36,7 @@ import useStyles from './styles';
                             <Form currentId={currentId} setCurrentId={setCurrentId}/>
                         </Grid>
                     </Grid>
+                    <Register/>
                 </Container>
             </Grow>
         </Container>

@@ -15,7 +15,7 @@ const Posts = ({post,setCurrentId}) => {
         !posts.length ? 
         
         (<div>
-            <h2>There are no posts right now... :(</h2>
+            <h2>Currently no posts...</h2>
         </div>) : (
             <Grid className={classes.mainContainer} container alignItems="stretch" spacing={3}>
                 {posts.map((post) => (
