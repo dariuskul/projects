@@ -13,10 +13,9 @@ export const login = async (req,res) =>{
     if(!comparer){
        return res.status(402).json('Credentials are invalid');
     }
-    let payLoad = {username: username};
+   let payLoad = {username: username, id: user._id};
    let acessToken = jwt.sign(payLoad,process.env.PRIVATE, {expiresIn: '1h'});
-   res.cookie("jwt",acessToken, {httpOnly: true});
-   res.send();
+   res.status(200).json({result: user, acessToken});
 }
 
 export const register = async (req,res) =>{
