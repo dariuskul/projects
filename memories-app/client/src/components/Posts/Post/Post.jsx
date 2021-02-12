@@ -8,12 +8,12 @@ import moment from 'moment';
 import {useDispatch} from 'react-redux';
 
 import {deletePost, likePost} from '../../../actions/posts'
-
+import {useSelector} from 'react-redux'
 export  const Post = ({post, setCurrentId}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-
-
+    const user = useSelector((state)=> state.users.user);
+    console.log(user, post)
     return(
         <Card className={classes.card}>
            {post.selectedFile ? (
@@ -26,13 +26,14 @@ export  const Post = ({post, setCurrentId}) => {
            ): <CircularProgress/>
             }
             <div className={classes.overlay}>
-                <Typography variant="h6">{post.creator}</Typography>
+                <Typography variant="h6">{post.name}</Typography>
                 <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
             </div>
             <div className={classes.overlay2}>
-                <Button style={{color: 'white'}} size="small" onClick={() => setCurrentId(post._id)}>
+            {user.result._id === post.creator && ( <Button style={{color: 'white'}} size="small" onClick={() => setCurrentId(post._id)}>
                     <MoreHorizIcon fontSize="default" />
                 </Button>
+            )}
             </div>
             <div className={classes.details}>
             <Typography variant="body2" color="textSecondary">{post.tags.map((tag)=> `# ${tag}`)}</Typography>
@@ -42,16 +43,17 @@ export  const Post = ({post, setCurrentId}) => {
                  <Typography variant="body2" color="textSecondary" >{post.message}</Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
-                <Button size="small" color="primary" onClick={()=> dispatch(likePost(post._id))}>
+                <Button size="small" disabled={!user}color="primary" onClick={()=> dispatch(likePost(post._id))}>
                     <ThumbUpAltIcon fontSize="small"/>
                     &nbsp;
                     Like
                     &nbsp;
                     {post.likecount}
-                </Button>
-                <Button size="small" color="primary" onClick={()=> dispatch(deletePost(post._id))}>
+                </Button> 
+                {user.result._id === post.creator && (<Button size="small" color="primary" onClick={()=> dispatch(deletePost(post._id))}>
                     <DeleteIcon fontSize="small"/>
-                </Button>
+                </Button>)}
+                
             </CardActions>
             
         </Card>

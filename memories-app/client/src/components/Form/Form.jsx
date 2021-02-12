@@ -9,11 +9,12 @@ import Alert from '@material-ui/lab/Alert';
 import  {useFormik} from 'formik';
 import * as yup from 'yup';
 import noob from '../../images/noob.png';
+
+const user = JSON.parse(localStorage.getItem('user'));
 const Form = ({currentId, setCurrentId}) => {
 
     const classes = useStyles();
-    const [postData, setData] = useState({
-        creator: '',
+    const [postData,setData] = useState({
         title: '',
         tags: '',
         selectedFile: noob,
@@ -21,7 +22,7 @@ const Form = ({currentId, setCurrentId}) => {
     });
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
     const dispatch = useDispatch();
-
+    const user = useSelector((state) => state.users.user);
 
 
     useEffect(()=>{
@@ -33,8 +34,6 @@ const Form = ({currentId, setCurrentId}) => {
 
 
     const validationSchema = yup.object({
-        creator: yup.string()
-          .required('Your name is required!'),
         title: yup.string()
             .required('Specify title for your memory!'),
         message: yup.string()
@@ -42,6 +41,17 @@ const Form = ({currentId, setCurrentId}) => {
         selectedFile: yup.mixed()
             .required('Your memory photo!')
       });
+
+      const clear = () =>{
+          setCurrentId(null)
+          setData({
+            title: '',
+            tags: '',
+            selectedFile: noob,
+            message: '',
+          })
+      }
+
 
         const formik = useFormik({
           initialValues: {
@@ -52,31 +62,34 @@ const Form = ({currentId, setCurrentId}) => {
             selectedFile: postData.selectedFile
           },
           validationSchema: validationSchema,
-          onSubmit: (values) => {
-            if(currentId)
+          onSubmit: (values, {resetForm}) => {
+            if(currentId){
                 dispatch(updatePost(currentId,values));
+                clear();
+                resetForm();
+            }
             else{
-                dispatch(createPost(values));
+                dispatch(createPost({...values, creator: user?.result?._id, name: user?.result?.name}));
+                resetForm();
             }
           }
         })
 
+        if(!user?.result?.name){
+            return(
+                <Paper className={classes.paper}>
+                    <Typography variant="h6" align="center">
+                        To create your own memories, please sign up!
+                    </Typography>
+                </Paper>
+            )
+        }
+
 
     return(
         <Paper className={classes.paper}>
-            {console.log(..."OPS", postData.creator)}
             <form autoComplete="off" noValidate className={`${classes.root} ${classes.form}`} onSubmit={formik.handleSubmit}>
                 <Typography variant="h6">{post ? 'Editing' : 'Creating'} Memory</Typography>
-                <TextField 
-                name="creator" 
-                variant="outlined" 
-                label="Creator" 
-                fullWidth
-                value={formik.values.creator}
-                onChange={formik.handleChange}
-                error={formik.touched.creator && Boolean(formik.errors.creator)}
-                helperText={formik.touched.creator && formik.errors.creator}
-                />
                 <TextField 
                 name="title" 
                 variant="outlined" 
@@ -114,7 +127,7 @@ const Form = ({currentId, setCurrentId}) => {
                 </div>
                 <Button className={classes.buttonSubmit} color="primary" variant="contained" size="large" type="submit" fullWidth>{post? 'Update memory!' : 'Create memory!'}</Button>
                 <Button className={classes.buttonSubmit} color="secondary" variant="contained" size="small" type="clear" fullWidth>Clear</Button>
-            </form>
+            </form>       
         </Paper>
     )
 

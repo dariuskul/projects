@@ -10,22 +10,16 @@ import Input from './Input';
 import { clear } from '../../actions/errors';
 import Alert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
-const Register = (props) => {
+import {useHistory} from 'react-router-dom';
+const Login = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
     const [userData] = useState({
-        name: '',
-        lastName: '',
         username: '',
         password: ''
     });
-
-
+    const history = useHistory();
     const validationSchema = yup.object({
-      name: yup.string()
-        .required('Specify your name!'),
-      lastName: yup.string()
-          .required('Specify your last name!'),
       username: yup.string()
           .required('Specify your username!'),
       password: yup.string()
@@ -35,14 +29,12 @@ const Register = (props) => {
 
     const formik = useFormik({
         initialValues: {
-          name: userData.name,
-          lastName: userData.lastName,
           username: userData.username,
           password: userData.password
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-           dispatch(register(values));
+             dispatch(login(values,history));
             
         }
     });
@@ -50,18 +42,16 @@ const Register = (props) => {
       <Container maxWidth="xs">
     <div className={classes.paper}> 
       <Avatar className={classes.avatar}>
-                          <LockOutlinedIcon/>
+          <LockOutlinedIcon/>
         </Avatar>
          <Typography component="h1" variant="h5">
-              Register
+          Login
          </Typography>
          {props.error && <Alert severity={props.error.type}>{props.error.message}</Alert> }
         <form className={classes.form} onSubmit={formik.handleSubmit}>
           <Grid container spacing={2}>
-            <Input type='name' name="name" label="Your first name" handleOnChange={formik.handleChange} value={formik.values.name} error={formik.touched.name && Boolean(formik.errors.name)} helperText={formik.touched.name && formik.errors.name} half/>
-            <Input type='name' name="lastName" label="Your last name" handleOnChange={formik.handleChange} value={formik.values.lastName} error={formik.touched.lastName && Boolean(formik.errors.lastName)} helperText={formik.touched.lastName && formik.errors.lastName}  half/>
-            <Input type='username' name="username" label="Your username" handleOnChange={formik.handleChange} value={formik.values.username} error={formik.touched.username && Boolean(formik.errors.username)} helperText={formik.touched.username && formik.errors.username} />
-            <Input type='password' name="password" label="Your password" handleOnChange={formik.handleChange} value={formik.values.password} error={formik.touched.password && Boolean(formik.errors.password)} helperText={formik.touched.password && formik.errors.password} />
+          <Input type='username' name="username" label="Your username" handleOnChange={formik.handleChange} value={formik.values.username} error={formik.touched.username && Boolean(formik.errors.username)} helperText={formik.touched.username && formik.errors.username} />
+          <Input type='password' name="password" label="Your password" handleOnChange={formik.handleChange} value={formik.values.password} error={formik.touched.password && Boolean(formik.errors.password)} helperText={formik.touched.password && formik.errors.password} />
           </Grid>
           <Button
             type="submit"
@@ -74,7 +64,7 @@ const Register = (props) => {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-               <Button component={Link} to="/auth/login">ALREADY HAVE AN ACCOUNT? LOGIN</Button>
+               <Button component={Link} to='/auth/register'>DON'T HAVE AN ACCOUNT? REGISTER</Button>
             </Grid>
           </Grid>
         </form>
@@ -85,4 +75,4 @@ const Register = (props) => {
 
 }
 
-export default Register;
+export default Login;
