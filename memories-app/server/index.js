@@ -26,6 +26,9 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
 app.use('/posts',posts);
 app.use('/',user);
+app.get('/', (req,res)=>{
+    res.send('Hello to the social media API!')
+})
 const PORT = process.env.PORT || 5000;
 mongoose.set('useFindAndModify', false);
 mongoose.connect(process.env.CONNECTION_URL, {useNewUrlParser: true, useUnifiedTopology: true}).then(()=> 
