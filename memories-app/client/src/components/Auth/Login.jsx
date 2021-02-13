@@ -52,7 +52,6 @@ const Login = (props) => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
              dispatch(login(values,history));
-            
         }
     });
     return(
@@ -61,9 +60,7 @@ const Login = (props) => {
       <Avatar className={classes.avatar}>
           <LockOutlinedIcon/>
         </Avatar>
-        <Collapse in={open}>
-        {message.msg ? (<Alert onClose={() => {setOpen(!open)}} severity={message.type}>{message.msg}</Alert>) : ''}
-        </Collapse>
+        {message.msg ? (<Alert severity={message.type}>{message.msg}</Alert>) : ''}
          <Typography component="h1" variant="h5">
           Login
          </Typography>

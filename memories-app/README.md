@@ -11,6 +11,7 @@ Social media project
 
 ### Technologies used
 
+- MongoDB
 - Nodejs express framework for backend
 - Reactjs + Redux for frontend
 - MaterialUI for prettier user interface

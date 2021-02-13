@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +10,7 @@ import { Avatar } from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import { logout } from '../../actions/users';
 import {useHistory} from 'react-router-dom';
+import decode from 'jwt-decode'
 const NavBar = () =>{
     const classes = useStyles();
     const user = useSelector((state)=> state.users.user);
@@ -20,6 +21,16 @@ const NavBar = () =>{
     }
   history.listen(()=>{
       dispatch({type: 'CLEAR'});
+  })
+  useEffect(()=>{
+      const token = user?.token;
+      if(token){
+          const decoded = decode(token)
+          if(decoded.exp * 1000 < new Date().getTime()){
+              logOut();
+          }
+      }
+
   })
 
 

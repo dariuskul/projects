@@ -1,5 +1,5 @@
 import * as api from '../api/index';
-import {FETCH_ALL, ERROR, SUCCESS, CREATE, LOGIN, LOGOUT} from '../constants/actionType';
+import {ERROR, SUCCESS, CREATE, LOGIN, LOGOUT} from '../constants/actionType';
 export const register = (post,history) => async (dispatch) =>{
     try {
         const { data } = await api.register(post);
