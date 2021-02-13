@@ -7,7 +7,7 @@ export default (errors = [], action) =>{
                 message: action.payload
             };
 
-        case 'FAILURE':
+        case 'ERROR':
             return {
                 type: 'error',
                 message: action.payload

@@ -4,8 +4,8 @@ const initialState = user ? { loggedIn: true, user } : [];
 export default (state  =initialState, action) => {
     switch(action.type){
         case 'CREATE':
-            return {
-                user: action.payload
+            return{
+                user: action.paylaod
             }
         case 'LOGIN':
             return {

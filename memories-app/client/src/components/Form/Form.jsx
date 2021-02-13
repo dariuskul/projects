@@ -5,7 +5,6 @@ import FileBase from 'react-file-base64';
 import {useDispatch} from 'react-redux';
 import { createPost, updatePost } from '../../actions/posts';
 import {useSelector} from 'react-redux';
-import Alert from '@material-ui/lab/Alert';
 import  {useFormik} from 'formik';
 import * as yup from 'yup';
 import noob from '../../images/noob.png';
@@ -22,8 +21,8 @@ const Form = ({currentId, setCurrentId}) => {
     });
     const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.users.user);
-
+    const user = JSON.parse(localStorage.getItem('user'))
+    
 
     useEffect(()=>{
         if(post){
@@ -52,6 +51,8 @@ const Form = ({currentId, setCurrentId}) => {
           })
       }
 
+      
+
 
         const formik = useFormik({
           initialValues: {
@@ -69,13 +70,13 @@ const Form = ({currentId, setCurrentId}) => {
                 resetForm();
             }
             else{
-                dispatch(createPost({...values, creator: user?.result?._id, name: user?.result?.name}));
+                dispatch(createPost({...values, creator: user?.result?._id, name: user?.result?.name, createdAt: new Date().toISOString()}));
                 resetForm();
             }
           }
         })
 
-        if(!user?.result?.name){
+        if(!user?.result){
             return(
                 <Paper className={classes.paper}>
                     <Typography variant="h6" align="center">
@@ -84,7 +85,6 @@ const Form = ({currentId, setCurrentId}) => {
                 </Paper>
             )
         }
-
 
     return(
         <Paper className={classes.paper}>

@@ -13,7 +13,7 @@ export  const Post = ({post, setCurrentId}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const user = useSelector((state)=> state.users.user);
-    console.log(user, post)
+    console.log(post)
     return(
         <Card className={classes.card}>
            {post.selectedFile ? (
@@ -30,7 +30,7 @@ export  const Post = ({post, setCurrentId}) => {
                 <Typography variant="body2">{moment(post.createdAt).fromNow()}</Typography>
             </div>
             <div className={classes.overlay2}>
-            {user.result._id === post.creator && ( <Button style={{color: 'white'}} size="small" onClick={() => setCurrentId(post._id)}>
+            {user?.result?._id === post.creator && ( <Button style={{color: 'white'}} size="small" onClick={() => setCurrentId(post._id)}>
                     <MoreHorizIcon fontSize="default" />
                 </Button>
             )}
@@ -48,9 +48,9 @@ export  const Post = ({post, setCurrentId}) => {
                     &nbsp;
                     Like
                     &nbsp;
-                    {post.likecount}
+                    {post.likes.length}
                 </Button> 
-                {user.result._id === post.creator && (<Button size="small" color="primary" onClick={()=> dispatch(deletePost(post._id))}>
+                {user?.result?._id === post.creator && (<Button size="small" color="primary" onClick={()=> dispatch(deletePost(post._id))}>
                     <DeleteIcon fontSize="small"/>
                 </Button>)}
                 

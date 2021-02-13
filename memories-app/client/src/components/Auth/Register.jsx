@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
-import { Button, Typography, Grid, Container, Avatar} from '@material-ui/core';
-import {useDispatch} from 'react-redux';
-import { login, register} from '../../actions/users';
+import React, {useEffect, useState} from 'react';
+import { Button, Typography, Grid, Container, Avatar, Collapse} from '@material-ui/core';
+import {useDispatch, useSelector} from 'react-redux';
+import { register} from '../../actions/users';
 import  {useFormik} from 'formik';
 import * as yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from './style';
 import Input from './Input';
-import { clear } from '../../actions/errors';
 import Alert from '@material-ui/lab/Alert';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 const Register = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
@@ -19,8 +18,10 @@ const Register = (props) => {
         username: '',
         password: ''
     });
+    const [message,setMessage] = useState('');
+    const [open,setOpen] = useState(true);
 
-
+    const history = useHistory();
     const validationSchema = yup.object({
       name: yup.string()
         .required('Specify your name!'),
@@ -32,6 +33,12 @@ const Register = (props) => {
           .required('Specify your password!').min(6, "Minimum 6 characters")
     });
 
+    const msgs = useSelector((state)=>state.errors.message);
+    useEffect(()=>{
+        if(msgs){
+            setMessage(msgs);
+        }
+    },[msgs])
 
     const formik = useFormik({
         initialValues: {
@@ -42,7 +49,7 @@ const Register = (props) => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-           dispatch(register(values));
+           dispatch(register(values,history));
             
         }
     });
@@ -50,8 +57,11 @@ const Register = (props) => {
       <Container maxWidth="xs">
     <div className={classes.paper}> 
       <Avatar className={classes.avatar}>
-                          <LockOutlinedIcon/>
+          <LockOutlinedIcon/>
         </Avatar>
+        <Collapse in={open}>
+        {message ? (<Alert onClose={() => {setOpen(!open)}} severity="success">{message}</Alert>) : ''}
+        </Collapse>
          <Typography component="h1" variant="h5">
               Register
          </Typography>

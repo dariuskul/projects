@@ -1,12 +1,10 @@
 import jwt from 'jsonwebtoken'
 const verify =(req,res,next) =>{
-    let accessToken = req.cookies.jwt
-
+    let accessToken = req.headers.authorization.split(" ")[1];
     if(!accessToken){
-        console.log("HAHAHAHAHA");
         return res.status(403).send();
     }
-
+    console.log(accessToken);
     let payload
     try{
         //use the jwt.verify method to verify the access token

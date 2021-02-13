@@ -1,14 +1,16 @@
+import {SUCCESS, ERROR, CLEAR} from '../constants/actionType'
+
 export const success = (message) => async (dispatch) => {
 
-    dispatch({type: 'SUCCESS', payload: message})
+    dispatch({type: SUCCESS, payload: message})
 }
 
 
 export const error = (error) => async (dispatch) => {
 
-    dispatch({type: 'FAILURE', payload: error})
+    dispatch({type: ERROR, payload: error.message})
 }
 
-export const clear = () => async(dispatch) =>{
-    dispatch({type: 'CLEAR', payload: null})
+export const clear = () => async (dispatch) =>{
+    dispatch({type: CLEAR, payload: null})
 }

@@ -1,23 +1,29 @@
-import React, {useState} from 'react';
-import { Button, Typography, Grid, Container, Avatar} from '@material-ui/core';
-import {useDispatch} from 'react-redux';
-import { login, register} from '../../actions/users';
+import React, {useState,useEffect} from 'react';
+import { Button, Typography, Grid, Container, Avatar, Collapse} from '@material-ui/core';
+import {useDispatch, useSelector} from 'react-redux';
+import { login} from '../../actions/users';
 import  {useFormik} from 'formik';
 import * as yup from 'yup';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import useStyles from './style';
 import Input from './Input';
-import { clear } from '../../actions/errors';
 import Alert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
 import {useHistory} from 'react-router-dom';
+
 const Login = (props) => {
     const dispatch = useDispatch();
     const classes = useStyles();
+    const [message,setMessage] = useState({
+      msg: '', // For error handling
+      type: ''
+    });
+    const [open,setOpen] = useState(true);
     const [userData] = useState({
         username: '',
         password: ''
     });
+
     const history = useHistory();
     const validationSchema = yup.object({
       username: yup.string()
@@ -25,6 +31,17 @@ const Login = (props) => {
       password: yup.string()
           .required('Specify your password!').min(6, "Minimum 6 characters")
     });
+
+
+    const msgs = useSelector((state)=>state.errors);
+    useEffect(()=>{
+        if(msgs){
+            setMessage({
+              msg: msgs.message,
+              type: msgs.type
+            });
+        }
+    },[msgs])
 
 
     const formik = useFormik({
@@ -44,6 +61,9 @@ const Login = (props) => {
       <Avatar className={classes.avatar}>
           <LockOutlinedIcon/>
         </Avatar>
+        <Collapse in={open}>
+        {message.msg ? (<Alert onClose={() => {setOpen(!open)}} severity={message.type}>{message.msg}</Alert>) : ''}
+        </Collapse>
          <Typography component="h1" variant="h5">
           Login
          </Typography>
