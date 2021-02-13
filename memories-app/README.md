@@ -34,3 +34,5 @@ Social media project
 - client/reducers - Redux reducers
 
 
+### Demo
+https://socialwrink.netlify.app/
