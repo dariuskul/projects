@@ -19,3 +19,10 @@ Social media project
 
 ### Project structure
 #### Backend
+
+- server/controllers
+- server/models : MongoDB models for users and posts
+- server/middleware : for authentication (only requests with valid token can access protected routes)
+- server/routes : routes
+
+
