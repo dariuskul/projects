@@ -15,3 +15,7 @@ Social media project
 - Nodejs express framework for backend
 - Reactjs + Redux for frontend
 - MaterialUI for prettier user interface
+
+
+### Project structure
+#### Backend
