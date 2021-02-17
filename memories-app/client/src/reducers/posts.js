@@ -1,4 +1,4 @@
-import {FETCH_ALL, DELETE, UPDATE, CREATE} from '../constants/actionType';
+import {FETCH_ALL, DELETE, UPDATE} from '../constants/actionType';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (posts = [], action) =>{

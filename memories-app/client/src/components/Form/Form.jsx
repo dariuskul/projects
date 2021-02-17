@@ -9,7 +9,6 @@ import  {useFormik} from 'formik';
 import * as yup from 'yup';
 import noob from '../../images/noob.png';
 
-const user = JSON.parse(localStorage.getItem('user'));
 const Form = ({currentId, setCurrentId}) => {
 
     const classes = useStyles();

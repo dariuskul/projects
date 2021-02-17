@@ -1,6 +1,6 @@
 import axios from 'axios';
-const API = axios.create({baseURL: `http://localhost:5000`});
-const url = `http://localhost:5000`;
+const API = axios.create({baseURL: `https://socialwrink.herokuapp.com`});
+const url = `https://socialwrink.herokuapp.com`;
 API.interceptors.request.use((req)=>{
     req.headers.Authorization = `Bearer ${JSON.parse(localStorage.getItem('user')).token}`;
     return req;

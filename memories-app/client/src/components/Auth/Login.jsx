@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import { Button, Typography, Grid, Container, Avatar, Collapse} from '@material-ui/core';
+import { Button, Typography, Grid, Container, Avatar} from '@material-ui/core';
 import {useDispatch, useSelector} from 'react-redux';
 import { login} from '../../actions/users';
 import  {useFormik} from 'formik';
@@ -18,7 +18,6 @@ const Login = (props) => {
       msg: '', // For error handling
       type: ''
     });
-    const [open,setOpen] = useState(true);
     const [userData] = useState({
         username: '',
         password: ''
